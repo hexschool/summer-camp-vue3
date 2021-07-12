@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="my-3">
+          <button type="button" class="btn btn-outline-primary" @click="status = !status">切換大頭貼解析度</button>
+          現在圖片解析度：
+          <span v-if="status">清晰</span>
+          <span v-else>模糊</span>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3" v-for="item in data">
+            <div class="card h-100">
+              <div class="position-absolute" style="top: 20px; right: 20px">
+                <button type="button" class="btn btn-outline-danger rounded-pill"
+                  @click="item.favorite = true">
+                  <i class="bi bi-heart fs-5" v-if="!item.favorite"></i>
+                  <i class="bi bi-heart-fill fs-5" v-else></i>
+                </button>
+              </div>
+              <img v-if="status" :src="item.picture.large" class="card-img-top">
+              <img v-else :src="item.picture.thumbnail" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{ item.name.title }} {{ item.name.first }} {{ item.name.last }}(
+                  <span v-if="item.gender === 'male'">👨</span>
+                  <span v-else>👩</span>
+                  )
+                </h5>
+                <p class="card-text">Email：<a :href="`mailto:${item.email}`">{{ item.email }}</a></p>
+                <p class="card-text">Phone: <a :href="`tel:${item.phone}`">{{ item.phone }}</a></p>
+                <p class="card-text">Cell: <a :href="`tel:${item.cell}`">{{ item.cell }}</a></p>
+                <p class="card-text">City: {{ item.location.city }}</p>
+                <p class="card-text">State: {{ item.location.state }}</p>
+                <p class="card-text">Country: {{ item.location.country }}</p>
+                <p class="card-text">Postcode: {{ item.location.postcode }}</p>
+                <p>
+                  Address：<a :href="`https://www.google.com.tw/maps/search/${item.location.city}${item.location.state}`"
+                    target="_blank">{{ item.location.city }} {{ item.location.state }} {{ item.location.country }} {{
+                    item.location.postcode }}</a>
+                </p>
+                <p class="card-text">description: {{ item.location.timezone.description }}</p>
+                <p class="card-text"><small class="text-muted">dob：{{ item.dob.date }}</small></p>
+                <p class="card-text"><small class="text-muted">registered：{{ item.registered.date }}</small></p>
+                <iframe width="100%" height="300" frameborder="0" scrolling="no"
+                  marginheight="0" marginwidth="0"
+                  :src=`https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.location.coordinates.latitude},${item.location.coordinates.longitude}&z=10&output=embed`></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+      crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="data.js"></script>
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+            status: true,
+            data: [],
+          }
+        },
+        created() {
+          this.data = results;
+        }
+      }).mount('#app');
+    </script>
+  </body>
+
+</html>
