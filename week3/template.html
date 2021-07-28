@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+      .completed {
+        text-decoration: line-through
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="app" class="container my-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text">待辦事項</span>
+          <input type="text" class="form-control" placeholder="準備要做的任務"
+            id="newTodo">
+          <button class="btn btn-primary" type="button" id="addTodo">新增</button>
+        </div>
+        <div class="card text-center">
+          <ul class="list-group list-group-flush text-left" id="todoList">
+            <li  class="list-group-item">
+              <div class="d-flex">
+                <div class="form-check">
+                  <div>
+                    <input id="a" type="checkbox" class="form-check-input">
+                    <label for="a">代辦事項</label>
+                  </div>
+                </div>
+                <button type="button" class="btn-close ms-auto remove">
+                </button>
+              </div>
+            </li>
+            <li  class="list-group-item">
+              <div class="d-flex">
+                <div class="form-check">
+                  <div>
+                    <input id="b" type="checkbox" class="form-check-input" checked>
+                    <label for="b" class="completed">已完成 代辦事項</label>
+                  </div>
+                </div>
+                <button type="button" class="btn-close ms-auto remove">
+                </button>
+              </div>
+            </li>
+            <li  class="list-group-item">
+              <div class="d-flex">
+                <div class="form-check">
+                  <input class="form-control" type="text" placeholder="編輯"/>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="card-footer d-flex justify-content-between">
+            <span>有 <span id="taskCount">1</span> 筆任務</span>
+            <div>
+              <a href="#" class="me-3">全部</a>
+              <a href="#" class="me-3">未完成</a>
+              <a href="#" class="me-3">已完成</a>
+              <a href="#" >清除所有任務</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+      crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+            newTodo: '',
+            todoList: [],
+          }
+        },
+        methods: {
+          
+        },
+      }).mount('#app');
+    </script>
+  </body>
+
+</html>
