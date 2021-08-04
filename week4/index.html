@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+      .completed {
+        text-decoration: line-through
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="app" class="container my-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text">待辦事項</span>
+          <input v-model="newTodo" @keyup.enter="addTodo" type="text" class="form-control" placeholder="準備要做的任務"
+            id="newTodo">
+          <button class="btn btn-primary" type="button" id="addTodo" @click="addTodo">新增</button>
+        </div>
+        <div class="card text-center">
+          <ul class="list-group list-group-flush text-left" id="todoList">
+            <li v-for="item in filterTodos" :key="item.id" class="list-group-item">
+              <div class="d-flex">
+                <div class="form-check">
+                  <input v-if="cacheId === item.id" v-model="cacheTitle" @keyup.enter="doneEdit(item)"
+                    @keyup.esc="cancelEdit" class="form-control" type="text" />
+                  <div v-else>
+                    <input :id="item.id" type="checkbox" class="form-check-input"
+                      @click="item.completed = !item.completed" :checked="item.completed">
+                    <label @dblclick="editTodo(item.id, item.title)" :for="item.id"
+                      :class="item.completed ? 'completed': ''" class="form-check-label">{{
+                      item.title }}</label>
+                  </div>
+                </div>
+                <button @click="removeTodo(item.id)" type="button" class="btn-close ms-auto remove" aria-label="Close">
+                </button>
+              </div>
+            </li>
+          </ul>
+          <div class="card-footer d-flex justify-content-between">
+            <span>全部有 <span id="taskCount">{{ todoList.length }}</span> 筆任務</span>
+            <div>
+              <a href="#" class="me-3" @click.prevent="visibility = 'all'">全部</a>
+              <a href="#" class="me-3" @click.prevent="visibility = 'active'">未完成</a>
+              <a href="#" class="me-3" @click.prevent="visibility = 'completed'">已完成</a>
+              <a href="#" @click.prevent="remoteAllTodo">清除所有任務</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+      crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      Vue.createApp({
+        setup() {
+          const todoList = Vue.reactive([]);
+
+          const newTodo = Vue.ref('');
+
+          const addTodo = () => {
+            const status = newTodo.value && newTodo.value.trim();
+            if (!status) {
+              return;
+            }
+
+            todoList.push({
+              id: Date.now(),
+              title: newTodo.value,
+              completed: false,
+            });
+            newTodo.value = '';
+          };
+
+          const remoteAllTodo = () => {
+            if (window.confirm('你確定要刪除全部 Todo?')) {
+              todoList.length = 0;
+            }
+          }
+          
+          const removeTodo = (id) => {
+            const index = todoList.findIndex((item) => item.id === id);
+            todoList.splice(index, 1);
+          };
+
+          const cacheTitle = Vue.ref('');
+          const cacheId = Vue.ref('');
+
+          const editTodo = (id, title) => {
+            cacheTitle.value = title;
+            cacheId.value = id;
+          };
+
+          const doneEdit = (item) => {
+            if (!cacheTitle.value) {
+              return;
+            }
+            const index = todoList.findIndex((item) => item.id === cacheId.value);
+            todoList[index].title = cacheTitle.value;
+
+            cacheTitle.value = '';
+            cacheId.value = '';
+          };
+
+          const cancelEdit = () => {
+            cacheTitle.value = '';
+            cacheId.value = '';
+          };
+          
+          const visibility = Vue.ref('all');
+
+          const filterTodos = Vue.computed(() => {
+            switch (visibility.value) {
+              case 'active':
+                return todoList.filter((item) => !item.completed);
+              case 'completed':
+                return todoList.filter((item) => item.completed);
+              default:
+                return todoList;
+            }
+          });
+
+          return {
+            newTodo,
+            todoList,
+            cacheTitle,
+            cacheId,
+            visibility,
+            editTodo,
+            addTodo,
+            removeTodo,
+            doneEdit,
+            cancelEdit,
+            remoteAllTodo,
+            filterTodos,
+          }
+        }
+      }).mount('#app');
+    </script>
+  </body>
+
+</html>
